@@ -1,0 +1,5 @@
+.devcontainer/.env
+build/
+build-*/
+# Local settings hold the server token
+duckb2cli.env

@@ -1,0 +1,53 @@
+{
+    "name": "duckb2cli",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "DUCKDB_VERSION": "2.0.0",
+            "HTTP_PROXY": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+            "HTTPS_PROXY": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+            "NO_PROXY": "localhost,127.0.0.1",
+            "http_proxy": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+            "https_proxy": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+            "no_proxy": "localhost,127.0.0.1"
+        },
+        "options": [
+            "--add-host=host.docker.internal:host-gateway",
+            "--add-host=host.external:${localEnv:HOST_IP:host-gateway}"
+        ]
+    },
+    "runArgs": [
+        "--name=duckb2cli-dev-${localEnv:DUCKB2CLI_INSTANCE:default}",
+        "--add-host=host.docker.internal:host-gateway",
+        "--add-host=host.external:${localEnv:HOST_IP:host-gateway}",
+        "--env-file=.devcontainer/.env"
+    ],
+    "mounts": [
+        "source=claude,target=/home/vscode/.claude,type=volume,consistency=cached",
+        "source=vscode-server-duckb2cli,target=/home/vscode/.vscode-server,type=volume,consistency=cached",
+        "source=duckb2cli-ccache,target=/home/vscode/.cache/ccache,type=volume,consistency=cached",
+        "source=duckb2cli-duckdb,target=/home/vscode/.duckdb,type=volume,consistency=cached"
+    ],
+    "containerEnv": {
+        "CONTAINER_NAME": "duckb2cli-dev-${localEnv:DUCKB2CLI_INSTANCE:default}",
+        "CCACHE_DIR": "/home/vscode/.cache/ccache",
+        "HTTP_PROXY": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+        "HTTPS_PROXY": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+        "NO_PROXY": "localhost,127.0.0.1,host.docker.internal,host.external",
+        "http_proxy": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+        "https_proxy": "${localEnv:VPN_DOCKER_HTTP_PROXY}",
+        "no_proxy": "localhost,127.0.0.1,host.docker.internal,host.external",
+        "PROJECT_NAME": "${localWorkspaceFolderBasename}",
+        "WORKSPACE_DIR": "${containerWorkspaceFolder}"
+    },
+    "remoteUser": "vscode",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "anthropic.claude-code",
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools"
+            ]
+        }
+    }
+}
